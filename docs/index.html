@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help Desk IA</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .demo-banner {
+      background: #fff8e1;
+      border-bottom: 2px solid #f9a825;
+      padding: 8px 20px;
+      font-size: 12px;
+      color: #5d4037;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .demo-banner a {
+      color: #1e66f5;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .demo-banner a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeFaqDrawer()"></div>
+
+<div class="app">
+
+  <!-- ── Sidebar ─────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">🤖</span>
+        <span class="logo-text">Help Desk IA</span>
+      </div>
+      <button class="new-chat-btn" id="newChatBtn">+ Nova Conversa</button>
+    </div>
+
+    <div class="sidebar-scroll">
+      <div class="sidebar-section">
+        <h3>Categorias FAQ</h3>
+        <div id="faqCategories"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Esta sessão</h3>
+        <div id="sessionsList"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Chat Main ────────────────────────────────── -->
+  <main class="chat-main">
+
+    <!-- Demo banner -->
+    <div class="demo-banner">
+      ⚡ <strong>Modo demonstração</strong> — FAQ local ativo. Para respostas com IA em tempo real,
+      <a href="https://github.com/Twoopia/chatbot-helpdesk-ia" target="_blank">rode o backend localmente</a>.
+    </div>
+
+    <div class="chat-header">
+      <div class="chat-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">FAQ Local</span>
+      </div>
+      <span class="header-title">Suporte Técnico</span>
+      <div class="chat-actions">
+        <button class="btn-icon" title="Ver FAQ" onclick="openFaqDrawer()">❓</button>
+        <button class="btn-icon" id="clearBtn" title="Limpar conversa">🗑️</button>
+      </div>
+    </div>
+
+    <div class="messages-container" id="messagesContainer">
+      <div class="welcome" id="welcomeScreen">
+        <div class="welcome-icon">🤖</div>
+        <h2>Help Desk IA</h2>
+        <p>Olá! Sou seu assistente de suporte técnico.<br>Como posso ajudar você hoje?</p>
+        <div class="quick-actions">
+          <button class="quick-btn" onclick="sendQuick('Como resetar minha senha?')">🔑 Resetar senha</button>
+          <button class="quick-btn" onclick="sendQuick('Estou sem acesso à internet')">🌐 Sem internet</button>
+          <button class="quick-btn" onclick="sendQuick('Impressora não funciona')">🖨️ Impressora</button>
+          <button class="quick-btn" onclick="sendQuick('Como conectar à VPN?')">🔒 VPN</button>
+          <button class="quick-btn" onclick="sendQuick('Como abrir um chamado?')">🎫 Abrir chamado</button>
+          <button class="quick-btn" onclick="sendQuick('Como instalar um programa?')">💿 Instalar software</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator" style="display:none">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+      <span class="typing-text">Buscando resposta…</span>
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrap">
+        <textarea
+          id="messageInput"
+          placeholder="Digite sua dúvida técnica…"
+          rows="1"
+          autofocus
+        ></textarea>
+        <button class="send-btn" id="sendBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <div class="input-hint">
+        <kbd>Enter</kbd> para enviar &nbsp;·&nbsp; <kbd>Shift+Enter</kbd> para nova linha
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── FAQ Drawer ──────────────────────────────────── -->
+<aside class="faq-drawer" id="faqDrawer">
+  <div class="faq-drawer-header">
+    <h3>Perguntas Frequentes</h3>
+    <button class="faq-close" onclick="closeFaqDrawer()">✕</button>
+  </div>
+  <div class="faq-drawer-body" id="faqDrawerBody">
+    <p style="color:var(--text-secondary);font-size:13px">Carregando FAQ…</p>
+  </div>
+</aside>
+
+<script src="js/app.js"></script>
+</body>
+</html>

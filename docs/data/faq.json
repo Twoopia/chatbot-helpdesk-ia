@@ -1,0 +1,100 @@
+{
+  "faqs": [
+    {
+      "id": "1",
+      "category": "Senhas e Acesso",
+      "question": "Como resetar minha senha?",
+      "keywords": ["senha", "password", "resetar", "esqueci", "recuperar", "trocar senha", "redefinir", "reset"],
+      "answer": "Para resetar sua senha:\n\n1. Acesse o portal de TI em https://ti.empresa.com\n2. Clique em **Esqueci minha senha**\n3. Informe seu e-mail corporativo\n4. Verifique sua caixa de entrada e clique no link recebido\n\n⚠️ O link expira em 30 minutos.\n\nSe não receber o e-mail, verifique a pasta de spam ou contate:\n📞 Ramal 1234 | 📧 suporte@empresa.com",
+      "helpful_count": 0
+    },
+    {
+      "id": "2",
+      "category": "Senhas e Acesso",
+      "question": "Minha conta foi bloqueada, o que fazer?",
+      "keywords": ["bloqueada", "bloqueado", "conta bloqueada", "travada", "acesso negado", "locked", "desbloqueio"],
+      "answer": "A conta é bloqueada após **5 tentativas incorretas** de senha.\n\nPara desbloquear:\n1. Aguarde **15 minutos** (desbloqueio automático)\n2. Ou contate o suporte imediatamente:\n   📞 Ramal 1234\n   📧 suporte@empresa.com\n\n⚠️ Nunca compartilhe sua senha com ninguém, incluindo a equipe de TI.",
+      "helpful_count": 0
+    },
+    {
+      "id": "3",
+      "category": "Rede e Internet",
+      "question": "Sem acesso à internet, como resolver?",
+      "keywords": ["internet", "rede", "sem acesso", "conexão", "wifi", "network", "cabo", "offline", "sem internet"],
+      "answer": "Siga estes passos para resolver problemas de conexão:\n\n1. Verifique se o cabo de rede está bem conectado\n2. Reinicie o computador\n3. Verifique se outros dispositivos têm internet\n4. Reinicie o roteador (aguarde 30 segundos)\n5. Verifique configurações de proxy:\n   - Painel de Controle → Opções de Internet → Conexões\n\nSe o problema persistir:\n📞 Ramal 1234 | 📧 suporte@empresa.com",
+      "helpful_count": 0
+    },
+    {
+      "id": "4",
+      "category": "E-mail",
+      "question": "Como configurar o e-mail corporativo no celular?",
+      "keywords": ["email", "e-mail", "celular", "smartphone", "mobile", "configurar email", "outlook mobile", "configuração"],
+      "answer": "Para configurar o e-mail corporativo no celular:\n\n**Usando Microsoft Outlook (recomendado):**\n1. Instale o **Outlook** na loja de apps\n2. Abra e toque em **Adicionar Conta**\n3. Informe seu e-mail: usuario@empresa.com\n4. Digite sua senha corporativa\n5. Aguarde a sincronização\n\n**Configurações manuais:**\n- Servidor: mail.empresa.com\n- Porta IMAP: 993 (SSL)\n- Porta SMTP: 587 (TLS)\n\n❓ Precisa de ajuda? 📞 Ramal 1234",
+      "helpful_count": 0
+    },
+    {
+      "id": "5",
+      "category": "Software",
+      "question": "Como instalar um programa no computador?",
+      "keywords": ["instalar", "instalação", "programa", "software", "aplicativo", "install", "download", "permissão"],
+      "answer": "Para instalar programas na empresa:\n\n**Software do catálogo aprovado:**\n1. Acesse https://software.empresa.com\n2. Selecione o programa desejado\n3. Clique em **Instalar** (não requer senha de administrador)\n\n**Precisar de software não listado?**\nAbra uma solicitação em: https://chamados.empresa.com\nOu ligue: 📞 Ramal 1234\n\n⚠️ Não instale software não autorizado — isso viola a política de TI e pode resultar em penalidades.",
+      "helpful_count": 0
+    },
+    {
+      "id": "6",
+      "category": "Impressoras",
+      "question": "Impressora não funciona, como resolver?",
+      "keywords": ["impressora", "imprimir", "printer", "impressão", "papel", "toner", "ink", "não imprime", "fila"],
+      "answer": "Para resolver problemas com impressora:\n\n1. Verifique se está ligada e com papel\n2. Confira se há mensagens de erro no visor\n3. Cancele impressões pendentes:\n   - Painel de Controle → Dispositivos e Impressoras\n   - Clique direito na impressora → Ver o que está sendo impresso\n   - Cancele todos os trabalhos\n4. Reinicie o serviço de impressão:\n   - Win+R → `services.msc` → **Print Spooler** → Reiniciar\n5. Reinstale o driver: https://drivers.empresa.com\n\n📞 Ramal 1234 para suporte presencial",
+      "helpful_count": 0
+    },
+    {
+      "id": "7",
+      "category": "VPN e Acesso Remoto",
+      "question": "Como conectar à VPN para trabalho remoto?",
+      "keywords": ["vpn", "remoto", "home office", "trabalho remoto", "acesso remoto", "tunnel", "fora do escritório"],
+      "answer": "Para conectar à VPN corporativa:\n\n**Primeira instalação:**\n1. Acesse https://vpn.empresa.com\n2. Faça login com suas credenciais corporativas\n3. Baixe e instale o cliente VPN\n4. Reinicie o computador\n\n**Uso diário:**\n1. Abra o cliente VPN\n2. Insira usuário e senha corporativos\n3. Aguarde a conexão (ícone fica verde ✅)\n\n⚠️ Mantenha o cliente VPN sempre atualizado.\n📞 Problemas: Ramal 1234 | 📧 suporte@empresa.com",
+      "helpful_count": 0
+    },
+    {
+      "id": "8",
+      "category": "Hardware",
+      "question": "Como solicitar troca ou manutenção de equipamento?",
+      "keywords": ["equipamento", "hardware", "computador", "notebook", "monitor", "teclado", "mouse", "manutenção", "troca", "defeito", "quebrado"],
+      "answer": "Para solicitar manutenção ou troca de equipamento:\n\n1. Abra um chamado em: https://chamados.empresa.com\n2. Selecione a categoria **Hardware**\n3. Descreva o problema detalhadamente\n4. Informe o **número de patrimônio** (etiqueta amarela no equipamento)\n\n**Prazos de atendimento (SLA):**\n- Crítico (sem trabalhar): até 4 horas\n- Moderado: até 1 dia útil\n- Solicitações gerais: até 3 dias úteis\n\n📞 Urgências: Ramal 1234",
+      "helpful_count": 0
+    },
+    {
+      "id": "9",
+      "category": "Microsoft Office",
+      "question": "Como ativar o Microsoft Office?",
+      "keywords": ["office", "word", "excel", "powerpoint", "ativar", "licença", "microsoft", "365", "não licenciado", "produto não licenciado"],
+      "answer": "O Microsoft Office é ativado automaticamente com sua conta corporativa:\n\n1. Abra qualquer app Office (Word, Excel, etc.)\n2. Clique em **Entrar** quando solicitado\n3. Use seu e-mail corporativo: usuario@empresa.com\n4. Digite sua senha corporativa\n\n**Se aparecer \"Produto não licenciado\":**\n1. Arquivo → Conta → **Gerenciar Conta**\n2. Faça logout e login novamente\n3. Se não resolver: 📞 Ramal 1234",
+      "helpful_count": 0
+    },
+    {
+      "id": "10",
+      "category": "Backup e Arquivos",
+      "question": "Como recuperar arquivos deletados ou perdidos?",
+      "keywords": ["arquivo", "recuperar", "deletado", "perdido", "backup", "restaurar", "lixeira", "excluído", "sumiu"],
+      "answer": "Para recuperar arquivos perdidos:\n\n**1. Verifique a Lixeira:**\n- Dê dois cliques na Lixeira do Desktop\n- Clique direito no arquivo → **Restaurar**\n\n**2. Versões anteriores:**\n- Clique direito na pasta → Propriedades → **Versões Anteriores**\n- Selecione uma versão e clique em Restaurar\n\n**3. Backup corporativo (drive Z:\\):**\n- Arquivos salvos em Z:\\ têm backup diário (últimos 30 dias)\n- Solicite restauração: 📧 suporte@empresa.com\n\n💡 Salve sempre em Z:\\ ou OneDrive para garantir backup!",
+      "helpful_count": 0
+    },
+    {
+      "id": "11",
+      "category": "Chamados e Suporte",
+      "question": "Como abrir um chamado de suporte?",
+      "keywords": ["chamado", "ticket", "suporte", "abrir chamado", "solicitar", "solicitação", "atendimento"],
+      "answer": "Para abrir um chamado de suporte técnico:\n\n**Portal de chamados (recomendado):**\n1. Acesse https://chamados.empresa.com\n2. Clique em **Novo Chamado**\n3. Selecione a categoria e preencha os detalhes\n4. Você receberá um número de protocolo por e-mail\n\n**Outros canais:**\n📞 Telefone: Ramal 1234\n📧 E-mail: suporte@empresa.com\n💬 Chat: Este chatbot!\n\n**Horário de atendimento:**\nSegunda a Sexta: 8h às 18h\nPlantão crítico: 24/7 pelo Ramal 1234",
+      "helpful_count": 0
+    },
+    {
+      "id": "12",
+      "category": "Senhas e Acesso",
+      "question": "Como acessar o sistema de RH?",
+      "keywords": ["rh", "recursos humanos", "sistema rh", "holerite", "contracheque", "férias", "ponto", "portal rh"],
+      "answer": "Para acessar o sistema de RH:\n\n1. Acesse: https://rh.empresa.com\n2. Use seu **CPF** como login\n3. Senha inicial: data de nascimento (DDMMAAAA)\n   - Troque a senha no primeiro acesso\n\n**No sistema você pode:**\n- Consultar holerites e informe de rendimentos\n- Solicitar férias\n- Registrar ponto\n- Atualizar dados cadastrais\n\n❓ Problemas de acesso: 📞 RH Ramal 5678",
+      "helpful_count": 0
+    }
+  ]
+}
