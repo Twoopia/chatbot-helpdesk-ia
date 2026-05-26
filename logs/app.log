@@ -1,0 +1,7 @@
+2026-05-26 16:45:48,319 | ERROR    | asyncio | Task exception was never retrieved
+future: <Task finished name='Task-2' coro=<AsyncClient.aclose() done, defined at C:\Users\rafab\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\httpx\_client.py:1978> exception=AttributeError("'AsyncHttpxClientWrapper' object has no attribute '_state'")>
+Traceback (most recent call last):
+  File "C:\Users\rafab\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\httpx\_client.py", line 1982, in aclose
+    if self._state != ClientState.CLOSED:
+       ^^^^^^^^^^^
+AttributeError: 'AsyncHttpxClientWrapper' object has no attribute '_state'

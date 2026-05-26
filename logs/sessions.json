@@ -1,0 +1,66 @@
+{
+  "test-smoke": {
+    "session_id": "test-smoke",
+    "created_at": "2026-05-26T16:47:33.754366",
+    "updated_at": "2026-05-26T16:47:33.757341",
+    "title": "Como resetar minha senha?",
+    "messages": [
+      {
+        "id": "956e7496-b877-4e8c-9cf1-04d03d0187f6",
+        "session_id": "test-smoke",
+        "role": "user",
+        "content": "Como resetar minha senha?",
+        "timestamp": "2026-05-26T16:47:33.754428",
+        "source": "ai"
+      },
+      {
+        "id": "7a8eb5ab-eae5-4547-9a6c-91d88dc8de56",
+        "session_id": "test-smoke",
+        "role": "assistant",
+        "content": "Para resetar sua senha:\n\n1. Acesse o portal de TI em https://ti.empresa.com\n2. Clique em **Esqueci minha senha**\n3. Informe seu e-mail corporativo\n4. Verifique sua caixa de entrada e clique no link recebido\n\n⚠️ O link expira em 30 minutos.\n\nSe não receber o e-mail, verifique a pasta de spam ou contate:\n📞 Ramal 1234 | 📧 suporte@empresa.com",
+        "timestamp": "2026-05-26T16:47:33.757329",
+        "source": "faq"
+      }
+    ]
+  },
+  "sess_mpn1rragqs6va": {
+    "session_id": "sess_mpn1rragqs6va",
+    "created_at": "2026-05-26T16:48:59.641373",
+    "updated_at": "2026-05-26T16:49:08.640150",
+    "title": "oi",
+    "messages": [
+      {
+        "id": "6681858e-acdc-4109-a1ed-22103ae5ff9a",
+        "session_id": "sess_mpn1rragqs6va",
+        "role": "user",
+        "content": "oi",
+        "timestamp": "2026-05-26T16:48:59.641471",
+        "source": "ai"
+      },
+      {
+        "id": "d14fb46a-fc8e-4977-9d77-914ac20250c5",
+        "session_id": "sess_mpn1rragqs6va",
+        "role": "assistant",
+        "content": "Ocorreu um erro ao processar sua mensagem. Tente novamente ou contate 📞 Ramal 1234.",
+        "timestamp": "2026-05-26T16:49:00.069816",
+        "source": "ai"
+      },
+      {
+        "id": "00255e49-2686-4d1f-9792-741bf6224b51",
+        "session_id": "sess_mpn1rragqs6va",
+        "role": "user",
+        "content": "a ia nao funciona né kkkkkk",
+        "timestamp": "2026-05-26T16:49:08.315887",
+        "source": "ai"
+      },
+      {
+        "id": "2385ebbd-4f5a-4717-bb5e-c7d10c9d2b52",
+        "session_id": "sess_mpn1rragqs6va",
+        "role": "assistant",
+        "content": "Ocorreu um erro ao processar sua mensagem. Tente novamente ou contate 📞 Ramal 1234.",
+        "timestamp": "2026-05-26T16:49:08.640142",
+        "source": "ai"
+      }
+    ]
+  }
+}
