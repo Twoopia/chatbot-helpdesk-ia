@@ -11,7 +11,7 @@
 <body>
 <div class="grain"></div>
 
-<div class="overlay" id="overlay" onclick="closeFaqDrawer()"></div>
+<div class="overlay" id="overlay"></div>
 
 <div class="app">
 
@@ -48,9 +48,12 @@
     </div>
 
     <div class="chat-header">
-      <div class="chat-status">
-        <span class="status-dot" id="statusDot"></span>
-        <span id="statusText">FAQ Local</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="menu-btn" id="menuBtn" title="Menu" aria-label="Abrir menu">☰</button>
+        <div class="chat-status">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">FAQ Local</span>
+        </div>
       </div>
       <span class="header-title">Suporte Técnico</span>
       <div class="chat-actions">

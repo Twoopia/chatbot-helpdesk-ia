@@ -426,6 +426,44 @@ function relTime(iso) {
   return `${Math.floor(h / 24)}d`;
 }
 
+/* ── Sidebar drawer (mobile) ─────────────────────────────────────── */
+const $sidebar = document.querySelector('.sidebar');
+
+function openSidebar() {
+  $sidebar.classList.add('open');
+  document.getElementById('overlay').classList.add('visible');
+}
+
+function closeSidebar() {
+  $sidebar.classList.remove('open');
+  const faqOpen = document.getElementById('faqDrawer').classList.contains('open');
+  if (!faqOpen) document.getElementById('overlay').classList.remove('visible');
+}
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  $sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+
+/* Fechar sidebar ao clicar no overlay (compartilhado com FAQ) */
+const _origCloseFaq = closeFaqDrawer;
+function closeFaqDrawer() {
+  document.getElementById('faqDrawer').classList.remove('open');
+  const sidebarOpen = $sidebar.classList.contains('open');
+  if (!sidebarOpen) document.getElementById('overlay').classList.remove('visible');
+}
+
+document.getElementById('overlay').addEventListener('click', () => {
+  closeSidebar();
+  closeFaqDrawer();
+});
+
+/* Fechar sidebar ao navegar para sessão no mobile */
+const _origLoadSession = loadSession;
+function loadSession(sid) {
+  _origLoadSession(sid);
+  if (window.innerWidth < 640) closeSidebar();
+}
+
 /* ── Init ────────────────────────────────────────────────────────── */
 connect();
 loadFAQ();

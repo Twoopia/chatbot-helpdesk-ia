@@ -246,6 +246,33 @@ document.getElementById('newChatBtn').addEventListener('click', () => {
   document.getElementById('clearBtn').click();
 });
 
+/* ── Sidebar drawer (mobile) ─────────────────────────────────────── */
+const $sidebar = document.querySelector('.sidebar');
+
+function openSidebar() {
+  $sidebar.classList.add('open');
+  document.getElementById('overlay').classList.add('visible');
+}
+function closeSidebar() {
+  $sidebar.classList.remove('open');
+  const faqOpen = document.getElementById('faqDrawer').classList.contains('open');
+  if (!faqOpen) document.getElementById('overlay').classList.remove('visible');
+}
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  $sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+
+document.getElementById('overlay').addEventListener('click', () => {
+  closeSidebar();
+  closeFaqDrawer();
+});
+
+document.getElementById('newChatBtn').addEventListener('click', () => {
+  document.getElementById('clearBtn').click();
+  if (window.innerWidth < 640) closeSidebar();
+});
+
 /* ── Init ────────────────────────────────────────────────────────── */
 setStatus('connecting');
 loadFAQData();
