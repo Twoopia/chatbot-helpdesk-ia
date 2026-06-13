@@ -503,7 +503,7 @@ const $audioName  = document.getElementById('audioPreviewName');
 
 $audioBtn.addEventListener('click', () => $audioInput.click());
 
-const MAX_AUDIO_MB = 25;
+const MAX_AUDIO_MB = 100;
 
 $audioInput.addEventListener('change', () => {
   const file = $audioInput.files[0];

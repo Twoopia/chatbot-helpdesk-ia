@@ -1,7 +1,7 @@
 import logging
 from typing import Dict
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 
 from app.models.chat import ChatRequest, ChatResponse
 from app.utils.rate_limit import rate_limit
@@ -155,6 +155,12 @@ async def analyze_audio_message(
 ) -> ChatResponse:
     """Analyze an uploaded audio file with FFT + Gemini multimodal."""
     audio_bytes = await audio.read()
+    max_bytes = settings.MAX_AUDIO_SIZE_MB * 1024 * 1024
+    if len(audio_bytes) > max_bytes:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Arquivo muito grande. Limite: {settings.MAX_AUDIO_SIZE_MB} MB.",
+        )
     mime_type = audio.content_type or "audio/mpeg"
 
     user_text = message.strip() or f"[Áudio enviado: {audio.filename}]"

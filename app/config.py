@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     LOG_DIR: str = "logs"
 
     GEMINI_API_KEY: str = ""
+    MAX_AUDIO_SIZE_MB: int = 100
 
     ALLOWED_ORIGINS: str = "*"
 
