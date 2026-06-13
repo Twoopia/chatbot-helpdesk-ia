@@ -165,7 +165,10 @@ async def analyze_audio_message(
 
     user_text = message.strip() or f"[Áudio enviado: {audio.filename}]"
     history_service.add_message(session_id, "user", user_text)
-    conversation_logger.log(session_id, "user", user_text)
+    try:
+        conversation_logger.log(session_id, "user", user_text)
+    except Exception:
+        pass
 
     try:
         analysis = await analyze_audio(audio_bytes)
@@ -174,25 +177,31 @@ async def analyze_audio_message(
         logger.error("Erro na análise de áudio: %s", exc)
         freq_report = "[Análise espectral indisponível — arquivo não processável]"
 
+    # Gemini inline limit is ~20 MB; skip raw bytes for larger files
+    _GEMINI_INLINE_LIMIT = 20 * 1024 * 1024
+    audio_payload = audio_bytes if len(audio_bytes) <= _GEMINI_INLINE_LIMIT else None
+
     try:
         ai_text = await gemini_service.analyze_audio_chat(
-            audio_bytes, mime_type, freq_report, message
+            audio_payload, mime_type, freq_report, message
         )
-        # BUG-004 fix: treat empty response as an error instead of silently passing
         if not ai_text or not ai_text.strip():
             raise ValueError("Gemini retornou resposta vazia")
         source = "gemini"
     except Exception as exc:
         logger.error("Erro no Gemini: %s", exc)
         ai_text = (
-            "⚠️ Não foi possível processar o áudio com Gemini. "
-            "Verifique se GEMINI_API_KEY está configurada corretamente."
+            "⚠️ Não foi possível processar o áudio com IA. "
+            "O relatório de frequências acima foi gerado localmente."
         )
         source = "error"
 
     full_response = f"{freq_report}\n\n{ai_text}"
     asst_msg = history_service.add_message(session_id, "assistant", full_response, source=source)
-    conversation_logger.log(session_id, "assistant", full_response, source)
+    try:
+        conversation_logger.log(session_id, "assistant", full_response, source)
+    except Exception:
+        pass
 
     return ChatResponse(
         id=asst_msg.id,

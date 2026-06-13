@@ -41,7 +41,7 @@ class GeminiService:
 
     async def analyze_audio_chat(
         self,
-        audio_bytes: bytes,
+        audio_bytes: "bytes | None",
         mime_type: str,
         frequency_report: str,
         user_message: str,
@@ -52,7 +52,7 @@ class GeminiService:
 
     def _call_gemini(
         self,
-        audio_bytes: bytes,
+        audio_bytes: "bytes | None",
         mime_type: str,
         frequency_report: str,
         user_message: str,
@@ -63,12 +63,18 @@ class GeminiService:
         question = user_message.strip() or "Analise este áudio e forneça feedback técnico completo."
         prompt = f"{frequency_report}\n\nMensagem do músico: {question}"
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[
+        if audio_bytes is not None:
+            contents = [
                 types.Part.from_bytes(data=audio_bytes, mime_type=mime_type),
                 types.Part.from_text(text=prompt),
-            ],
+            ]
+        else:
+            # File exceeds Gemini inline limit — send only the frequency report + prompt
+            contents = [types.Part.from_text(text=prompt)]
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=AUDIO_SYSTEM_PROMPT,
             ),
