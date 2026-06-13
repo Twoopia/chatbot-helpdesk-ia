@@ -154,17 +154,27 @@ async def analyze_audio_message(
     session_id: str = Form(...),
 ) -> ChatResponse:
     """Analyze an uploaded audio file with FFT + Gemini multimodal."""
-    audio_bytes = await audio.read()
+    try:
+        audio_bytes = await audio.read()
+    except Exception as exc:
+        logger.exception("Falha ao ler bytes do áudio: %s", exc)
+        raise HTTPException(status_code=400, detail="Falha ao ler o arquivo de áudio.")
+
     max_bytes = settings.MAX_AUDIO_SIZE_MB * 1024 * 1024
     if len(audio_bytes) > max_bytes:
         raise HTTPException(
             status_code=413,
             detail=f"Arquivo muito grande. Limite: {settings.MAX_AUDIO_SIZE_MB} MB.",
         )
-    mime_type = audio.content_type or "audio/mpeg"
 
-    user_text = message.strip() or f"[Áudio enviado: {audio.filename}]"
-    history_service.add_message(session_id, "user", user_text)
+    mime_type = audio.content_type or "audio/mpeg"
+    user_text = message.strip() or f"[Áudio enviado: {audio.filename or 'arquivo'}]"
+
+    try:
+        history_service.add_message(session_id, "user", user_text)
+    except Exception as exc:
+        logger.exception("Falha ao salvar mensagem do usuário: %s", exc)
+
     try:
         conversation_logger.log(session_id, "user", user_text)
     except Exception:
@@ -174,7 +184,7 @@ async def analyze_audio_message(
         analysis = await analyze_audio(audio_bytes)
         freq_report = build_frequency_report(analysis)
     except Exception as exc:
-        logger.error("Erro na análise de áudio: %s", exc)
+        logger.exception("Erro na análise de áudio: %s", exc)
         freq_report = "[Análise espectral indisponível — arquivo não processável]"
 
     # Gemini inline limit is ~20 MB; skip raw bytes for larger files
@@ -189,7 +199,7 @@ async def analyze_audio_message(
             raise ValueError("Gemini retornou resposta vazia")
         source = "gemini"
     except Exception as exc:
-        logger.error("Erro no Gemini: %s", exc)
+        logger.exception("Erro no Gemini: %s", exc)
         ai_text = (
             "⚠️ Não foi possível processar o áudio com IA. "
             "O relatório de frequências acima foi gerado localmente."
@@ -197,7 +207,15 @@ async def analyze_audio_message(
         source = "error"
 
     full_response = f"{freq_report}\n\n{ai_text}"
-    asst_msg = history_service.add_message(session_id, "assistant", full_response, source=source)
+
+    try:
+        asst_msg = history_service.add_message(session_id, "assistant", full_response, source=source)
+    except Exception as exc:
+        logger.exception("Falha ao salvar resposta do assistente: %s", exc)
+        # Gera um Message mínimo para não travar a resposta
+        from app.models.chat import Message as _Msg
+        asst_msg = _Msg(session_id=session_id, role="assistant", content=full_response, source=source)
+
     try:
         conversation_logger.log(session_id, "assistant", full_response, source)
     except Exception:
