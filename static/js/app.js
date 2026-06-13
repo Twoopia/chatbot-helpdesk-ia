@@ -92,7 +92,7 @@ function handleServerMessage(msg) {
 }
 
 /* ── Send message ──────────────────────────────────────────────── */
-function send() {
+function _sendText() {
   const text = $input.value.trim();
   if (!text || !ws || ws.readyState !== 1) return;
 
@@ -347,7 +347,7 @@ async function refreshSessions() {
   } catch { /* ignore */ }
 }
 
-function loadSession(sid) {
+function _loadSessionCore(sid) {
   if (sid === sessionId) return;
   sessionId = sid;
   localStorage.setItem('helpdesk_session', sessionId);
@@ -439,11 +439,6 @@ function openFaqDrawer() {
   document.getElementById('overlay').classList.add('visible');
 }
 
-function closeFaqDrawer() {
-  document.getElementById('faqDrawer').classList.remove('open');
-  document.getElementById('overlay').classList.remove('visible');
-}
-
 /* ── Utils ───────────────────────────────────────────────────────── */
 function escHtml(str) {
   return String(str)
@@ -481,7 +476,6 @@ document.getElementById('menuBtn').addEventListener('click', () => {
 });
 
 /* Fechar sidebar ao clicar no overlay (compartilhado com FAQ) */
-const _origCloseFaq = closeFaqDrawer;
 function closeFaqDrawer() {
   document.getElementById('faqDrawer').classList.remove('open');
   const sidebarOpen = $sidebar.classList.contains('open');
@@ -494,9 +488,8 @@ document.getElementById('overlay').addEventListener('click', () => {
 });
 
 /* Fechar sidebar ao navegar para sessão no mobile */
-const _origLoadSession = loadSession;
 function loadSession(sid) {
-  _origLoadSession(sid);
+  _loadSessionCore(sid);
   if (window.innerWidth < 640) closeSidebar();
 }
 
@@ -565,8 +558,7 @@ async function sendAudio(file, message) {
   }
 }
 
-/* Override send() to handle pending audio */
-const _originalSend = send;
+/* Audio-aware send — calls _sendText() for plain text messages */
 function send() {
   if (pendingAudioFile) {
     const text = $input.value.trim();
@@ -584,7 +576,7 @@ function send() {
     sendAudio(file, text);
     return;
   }
-  _originalSend();
+  _sendText();
 }
 
 /* ── Init ────────────────────────────────────────────────────────── */
