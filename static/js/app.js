@@ -563,12 +563,7 @@ function send() {
   if (pendingAudioFile) {
     const text = $input.value.trim();
     hideWelcome();
-    renderMessage({
-      role: 'user',
-      content: text || `🎵 ${pendingAudioFile.name}`,
-      source: 'user',
-      timestamp: new Date().toISOString(),
-    });
+    renderAudioBubble(pendingAudioFile, text);
     const file = pendingAudioFile;
     $input.value = '';
     resizeInput();
@@ -577,6 +572,43 @@ function send() {
     return;
   }
   _sendText();
+}
+
+function renderAudioBubble(file, extraText) {
+  const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+  const row = document.createElement('div');
+  row.className = 'msg-row user';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = '👤';
+
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble audio-msg-card';
+  bubble.innerHTML =
+    `<div class="audio-attach">` +
+      `<span class="audio-attach-icon">🎵</span>` +
+      `<div class="audio-attach-info">` +
+        `<span class="audio-attach-name">${escHtml(file.name)}</span>` +
+        `<span class="audio-attach-meta">${sizeMB} MB · Enviado</span>` +
+      `</div>` +
+      `<span class="audio-attach-check">✓</span>` +
+    `</div>` +
+    (extraText ? `<div class="audio-attach-text">${escHtml(extraText)}</div>` : '');
+
+  const meta = document.createElement('div');
+  meta.className = 'msg-meta';
+  meta.innerHTML = `<span>${formatTime(new Date().toISOString())}</span>`;
+
+  body.appendChild(bubble);
+  body.appendChild(meta);
+  row.appendChild(avatar);
+  row.appendChild(body);
+  $messages.appendChild(row);
+  scrollBottom();
 }
 
 /* ── Init ────────────────────────────────────────────────────────── */

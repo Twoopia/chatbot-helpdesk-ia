@@ -721,3 +721,46 @@ body {
 
 /* ── Gemini badge ────────────────────────────────────── */
 .badge-gemini { background: rgba(59,130,246,0.12); color: #60a5fa; }
+
+/* ── Audio message card ──────────────────────────────── */
+.audio-msg-card { min-width: 220px; }
+
+.audio-attach {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.audio-attach-icon { font-size: 22px; flex-shrink: 0; }
+.audio-attach-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.audio-attach-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+.audio-attach-meta { font-size: 11px; color: rgba(255,255,255,0.55); }
+.audio-attach-check {
+  font-size: 15px;
+  color: #4ADE80;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.audio-attach-text {
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.5;
+}
