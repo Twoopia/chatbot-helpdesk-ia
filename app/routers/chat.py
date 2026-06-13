@@ -1,11 +1,14 @@
 import logging
 from typing import Dict
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, File, Form, UploadFile, WebSocket, WebSocketDisconnect
 
 from app.models.chat import ChatRequest, ChatResponse
+from app.utils.rate_limit import rate_limit
 from app.services.ai_service import ai_service
+from app.services.audio_service import analyze_audio, build_frequency_report
 from app.services.faq_service import faq_service
+from app.services.gemini_service import gemini_service
 from app.services.history_service import history_service
 from app.services.logger_service import conversation_logger
 
@@ -48,7 +51,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str) -> None:
             if not user_message:
                 continue
 
-            user_msg = history_service.add_message(session_id, "user", user_message)
+            history_service.add_message(session_id, "user", user_message)
             conversation_logger.log(session_id, "user", user_message)
 
             faq_match = faq_service.find_best_match(user_message)
@@ -108,7 +111,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str) -> None:
         manager.disconnect(session_id)
 
 
-@router.post("/message", response_model=ChatResponse)
+@router.post("/message", response_model=ChatResponse, dependencies=[Depends(rate_limit(30))])
 async def send_message(request: ChatRequest) -> ChatResponse:
     """REST fallback for non-WebSocket clients."""
     history_service.add_message(request.session_id, "user", request.message)
@@ -141,4 +144,54 @@ async def send_message(request: ChatRequest) -> ChatResponse:
         session_id=request.session_id,
         timestamp=asst_msg.timestamp.isoformat(),
         source=result["source"],
+    )
+
+
+@router.post("/audio", response_model=ChatResponse, dependencies=[Depends(rate_limit(10))])
+async def analyze_audio_message(
+    audio: UploadFile = File(...),
+    message: str = Form(default=""),
+    session_id: str = Form(...),
+) -> ChatResponse:
+    """Analyze an uploaded audio file with FFT + Gemini multimodal."""
+    audio_bytes = await audio.read()
+    mime_type = audio.content_type or "audio/mpeg"
+
+    user_text = message.strip() or f"[Áudio enviado: {audio.filename}]"
+    history_service.add_message(session_id, "user", user_text)
+    conversation_logger.log(session_id, "user", user_text)
+
+    try:
+        analysis = await analyze_audio(audio_bytes)
+        freq_report = build_frequency_report(analysis)
+    except Exception as exc:
+        logger.error("Erro na análise de áudio: %s", exc)
+        freq_report = "[Análise espectral indisponível — arquivo não processável]"
+
+    try:
+        ai_text = await gemini_service.analyze_audio_chat(
+            audio_bytes, mime_type, freq_report, message
+        )
+        # BUG-004 fix: treat empty response as an error instead of silently passing
+        if not ai_text or not ai_text.strip():
+            raise ValueError("Gemini retornou resposta vazia")
+        source = "gemini"
+    except Exception as exc:
+        logger.error("Erro no Gemini: %s", exc)
+        ai_text = (
+            "⚠️ Não foi possível processar o áudio com Gemini. "
+            "Verifique se GEMINI_API_KEY está configurada corretamente."
+        )
+        source = "error"
+
+    full_response = f"{freq_report}\n\n{ai_text}"
+    asst_msg = history_service.add_message(session_id, "assistant", full_response, source=source)
+    conversation_logger.log(session_id, "assistant", full_response, source)
+
+    return ChatResponse(
+        id=asst_msg.id,
+        message=full_response,
+        session_id=session_id,
+        timestamp=asst_msg.timestamp.isoformat(),
+        source=source,
     )

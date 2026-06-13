@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 from typing import List, Optional
 
 from app.models.chat import FAQItem, FAQSearchResult
@@ -46,8 +47,11 @@ class FAQService:
             score = 0.0
             combined = (faq.question + " " + " ".join(faq.keywords)).lower()
 
+            # BUG-003 fix: whole-word matching instead of substring to avoid
+            # false positives like "red" matching "thread"
             for kw in faq.keywords:
-                if kw.lower() in q:
+                pattern = r"(?<!\w)" + re.escape(kw.lower()) + r"(?!\w)"
+                if re.search(pattern, q):
                     score += 0.6
 
             faq_words = set(combined.split())
@@ -61,6 +65,7 @@ class FAQService:
         return sorted(results, key=lambda r: r.score, reverse=True)[:5]
 
     def find_best_match(self, query: str, threshold: float = 0.55) -> Optional[FAQItem]:
+        # Two-stage filter: broad candidates at 0.25, strict match at threshold
         results = self.search(query, threshold=0.25)
         if results and results[0].score >= threshold:
             return results[0].item

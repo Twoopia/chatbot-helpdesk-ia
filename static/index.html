@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Help Desk IA</title>
+  <title>HEAVYBASS.ia</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="/static/css/style.css" />
@@ -19,20 +19,20 @@
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="logo">
-        <span class="logo-icon">🤖</span>
-        <span class="logo-text">Help Desk IA</span>
+        <span class="logo-icon">🎛️</span>
+        <span class="logo-text">HEAVYBASS<span>.ia</span></span>
       </div>
-      <button class="new-chat-btn" id="newChatBtn">+ Nova Conversa</button>
+      <button class="new-chat-btn" id="newChatBtn">+ Nova Sessão</button>
     </div>
 
     <div class="sidebar-scroll">
       <div class="sidebar-section">
-        <h3>Categorias FAQ</h3>
+        <h3>Tópicos</h3>
         <div id="faqCategories"></div>
       </div>
 
       <div class="sidebar-section">
-        <h3>Conversas Recentes</h3>
+        <h3>Sessões Recentes</h3>
         <div id="sessionsList"></div>
       </div>
     </div>
@@ -49,40 +49,48 @@
           <span id="statusText">Conectando…</span>
         </div>
       </div>
-      <span class="header-title">Suporte Técnico</span>
+      <span class="header-title">Engenheiro de Mix</span>
       <div class="chat-actions">
-        <button class="btn-icon" id="faqBtn" title="Ver FAQ" onclick="openFaqDrawer()">❓</button>
-        <button class="btn-icon" id="clearBtn" title="Limpar conversa">🗑️</button>
+        <button class="btn-icon" id="faqBtn" title="Base de Conhecimento" onclick="openFaqDrawer()">📖</button>
+        <button class="btn-icon" id="clearBtn" title="Limpar sessão">🗑️</button>
       </div>
     </div>
 
     <div class="messages-container" id="messagesContainer">
       <div class="welcome" id="welcomeScreen">
-        <div class="welcome-icon">🤖</div>
-        <h2>Help Desk IA</h2>
-        <p>Olá! Sou seu assistente de suporte técnico.<br>Como posso ajudar você hoje?</p>
+        <div class="welcome-icon">🎛️</div>
+        <h2>HEAVYBASS.ia</h2>
+        <p>Seu engenheiro de som digital.<br>Envie um áudio ou descreva seu problema de mix.</p>
         <div class="quick-actions">
-          <button class="quick-btn" onclick="sendQuick('Como resetar minha senha?')">🔑 Resetar senha</button>
-          <button class="quick-btn" onclick="sendQuick('Estou sem acesso à internet')">🌐 Sem internet</button>
-          <button class="quick-btn" onclick="sendQuick('Impressora não funciona')">🖨️ Impressora</button>
-          <button class="quick-btn" onclick="sendQuick('Como conectar à VPN?')">🔒 VPN</button>
-          <button class="quick-btn" onclick="sendQuick('Como abrir um chamado?')">🎫 Abrir chamado</button>
-          <button class="quick-btn" onclick="sendQuick('Como instalar um programa?')">💿 Instalar software</button>
+          <button class="quick-btn" onclick="sendQuick('Como deixar o baixo mais presente no mix?')">🔊 Graves fracos</button>
+          <button class="quick-btn" onclick="sendQuick('Como configurar um compressor para kick drum?')">🥁 Compressor no kick</button>
+          <button class="quick-btn" onclick="sendQuick('Meu vocal está abafado, como resolver com EQ?')">🎤 Vocal abafado</button>
+          <button class="quick-btn" onclick="sendQuick('Qual o LUFS ideal para lançar no Spotify?')">📊 LUFS para streaming</button>
+          <button class="quick-btn" onclick="sendQuick('Como fazer sidechain de compressor entre kick e baixo?')">⚡ Sidechain kick/bass</button>
+          <button class="quick-btn" onclick="sendQuick('Meu mix está muito fechado, como abrir o som?')">🎚️ Mix fechado</button>
         </div>
       </div>
     </div>
 
     <div class="typing-indicator" id="typingIndicator" style="display:none">
       <div class="typing-dots"><span></span><span></span><span></span></div>
-      <span class="typing-text">Assistente digitando…</span>
+      <span class="typing-text">Analisando…</span>
     </div>
 
     <div class="input-area">
+      <div id="audioPreview" class="audio-preview" style="display:none">
+        <span>🎵</span>
+        <span class="audio-preview-name" id="audioPreviewName"></span>
+        <button class="audio-preview-remove" onclick="removeAudio()" title="Remover áudio">✕</button>
+      </div>
       <div class="input-wrap">
+        <button class="btn-icon audio-btn" id="audioBtn" title="Enviar áudio para análise com IA">🎵</button>
+        <input type="file" id="audioInput" accept="audio/*" style="display:none">
         <textarea
           id="messageInput"
-          placeholder="Digite sua dúvida técnica…"
+          placeholder="Descreva seu problema de mix ou envie um áudio…"
           rows="1"
+          maxlength="4000"
           autofocus
         ></textarea>
         <button class="send-btn" id="sendBtn" disabled>
@@ -94,19 +102,20 @@
       </div>
       <div class="input-hint">
         <kbd>Enter</kbd> para enviar &nbsp;·&nbsp; <kbd>Shift+Enter</kbd> para nova linha
+        &nbsp;·&nbsp; 🎵 para análise de áudio
       </div>
     </div>
   </main>
 </div>
 
-<!-- ── FAQ Drawer ──────────────────────────────────── -->
+<!-- ── Base de Conhecimento Drawer ─────────────────── -->
 <aside class="faq-drawer" id="faqDrawer">
   <div class="faq-drawer-header">
-    <h3>Perguntas Frequentes</h3>
+    <h3>Base de Conhecimento</h3>
     <button class="faq-close" onclick="closeFaqDrawer()">✕</button>
   </div>
   <div class="faq-drawer-body" id="faqDrawerBody">
-    <p style="color:var(--text-secondary);font-size:13px">Carregando FAQ…</p>
+    <p style="color:var(--text-secondary);font-size:13px">Carregando…</p>
   </div>
 </aside>
 

@@ -7,7 +7,13 @@ let sessionId = localStorage.getItem('helpdesk_session') || generateId();
 localStorage.setItem('helpdesk_session', sessionId);
 
 function generateId() {
-  return 'sess_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  // FE-001 fix: use crypto.randomUUID for high-entropy session IDs
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return 'sess_' + crypto.randomUUID().replace(/-/g, '');
+  }
+  return 'sess_' + Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 9) +
+    Math.random().toString(36).slice(2, 9);
 }
 
 /* ── State ─────────────────────────────────────────────────────── */
@@ -197,15 +203,34 @@ function finalizeStream(data) {
 }
 
 /* ── Format ─────────────────────────────────────────────────────── */
+function escHtmlRaw(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function baseFormat(text) {
+  return escHtmlRaw(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px;font-size:12px">$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
 function formatContent(text) {
   if (!text) return '';
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;font-size:12px">$1</code>')
-    .replace(/\n/g, '<br>');
+  if (text.includes('[RELATÓRIO TÉCNICO DE FREQUÊNCIAS]')) {
+    const firstDash = text.indexOf('━━━');
+    const secondDash = text.indexOf('━━━', firstDash + 10);
+    if (firstDash !== -1 && secondDash !== -1) {
+      const lineEnd = text.indexOf('\n', secondDash);
+      const splitAt = lineEnd !== -1 ? lineEnd + 1 : secondDash + 35;
+      const reportPart = text.substring(0, splitAt).trimEnd();
+      const aiPart = text.substring(splitAt).trim();
+      return (
+        `<div class="freq-report"><pre>${escHtmlRaw(reportPart)}</pre></div>` +
+        (aiPart ? baseFormat(aiPart) : '')
+      );
+    }
+  }
+  return baseFormat(text);
 }
 
 function formatTime(ts) {
@@ -216,7 +241,12 @@ function formatTime(ts) {
 }
 
 function sourceBadge(source) {
-  const map = { ai: ['badge-ai', 'IA'], faq: ['badge-faq', 'FAQ'], error: ['badge-error', 'Erro'] };
+  const map = {
+    ai:     ['badge-ai',     'IA'],
+    faq:    ['badge-faq',   'FAQ'],
+    error:  ['badge-error', 'Erro'],
+    gemini: ['badge-gemini','Gemini'],
+  };
   const entry = map[source];
   if (!entry) return '';
   return `<span class="source-badge ${entry[0]}">${entry[1]}</span>`;
@@ -274,16 +304,16 @@ function buildWelcome() {
   d.id = 'welcomeScreen';
   d.className = 'welcome';
   d.innerHTML = `
-    <div class="welcome-icon">🤖</div>
-    <h2>Help Desk IA</h2>
-    <p>Olá! Sou seu assistente de suporte técnico.<br>Como posso ajudar você hoje?</p>
+    <div class="welcome-icon">🎛️</div>
+    <h2>HEAVYBASS.ia</h2>
+    <p>Seu engenheiro de som digital.<br>Envie um áudio ou descreva seu problema de mix.</p>
     <div class="quick-actions">
-      <button class="quick-btn" onclick="sendQuick('Como resetar minha senha?')">🔑 Resetar senha</button>
-      <button class="quick-btn" onclick="sendQuick('Estou sem acesso à internet')">🌐 Sem internet</button>
-      <button class="quick-btn" onclick="sendQuick('Impressora não funciona')">🖨️ Impressora</button>
-      <button class="quick-btn" onclick="sendQuick('Como conectar à VPN?')">🔒 VPN</button>
-      <button class="quick-btn" onclick="sendQuick('Como abrir um chamado?')">🎫 Abrir chamado</button>
-      <button class="quick-btn" onclick="sendQuick('Como instalar um programa?')">💿 Instalar software</button>
+      <button class="quick-btn" onclick="sendQuick('Como deixar o baixo mais presente no mix?')">🔊 Graves fracos</button>
+      <button class="quick-btn" onclick="sendQuick('Como configurar um compressor para kick drum?')">🥁 Compressor no kick</button>
+      <button class="quick-btn" onclick="sendQuick('Meu vocal está abafado, como resolver com EQ?')">🎤 Vocal abafado</button>
+      <button class="quick-btn" onclick="sendQuick('Qual o LUFS ideal para lançar no Spotify?')">📊 LUFS para streaming</button>
+      <button class="quick-btn" onclick="sendQuick('Como fazer sidechain de compressor entre kick e baixo?')">⚡ Sidechain kick/bass</button>
+      <button class="quick-btn" onclick="sendQuick('Meu mix está muito fechado, como abrir o som?')">🎚️ Mix fechado</button>
     </div>`;
   return d;
 }
@@ -338,16 +368,16 @@ async function loadFAQ() {
 }
 
 const CAT_ICONS = {
-  'Senhas e Acesso': '🔑',
-  'Rede e Internet': '🌐',
-  'E-mail': '📧',
-  'Software': '💿',
-  'Impressoras': '🖨️',
-  'VPN e Acesso Remoto': '🔒',
-  'Hardware': '🖥️',
-  'Microsoft Office': '📊',
-  'Backup e Arquivos': '💾',
-  'Chamados e Suporte': '🎫',
+  'Equalização':          '🎚️',
+  'Compressão':           '🔊',
+  'Loudness e Mastering': '📊',
+  'Graves e Sub-bass':    '🎸',
+  'Mixagem Vocal':        '🎤',
+  'Efeitos':              '🌊',
+  'Sidechain':            '⚡',
+  'Stems e Exportação':   '💾',
+  'Análise de Áudio':     '🔬',
+  'Produção Geral':       '🎹',
 };
 
 function renderFaqCategories() {
@@ -366,6 +396,12 @@ function renderFaqCategories() {
   });
 }
 
+// BUG-006 fix: use event delegation instead of inline onclick with JSON.stringify
+$faqBody.addEventListener('click', e => {
+  const btn = e.target.closest('.faq-use-btn');
+  if (btn) useFaq(btn.dataset.question);
+});
+
 function renderFaqDrawer(faqs) {
   $faqBody.innerHTML = '';
   if (!faqs.length) {
@@ -382,7 +418,7 @@ function renderFaqDrawer(faqs) {
       </div>
       <div class="faq-answer">
         ${escHtml(faq.answer)}
-        <br><button class="faq-use-btn" onclick="useFaq(${JSON.stringify(faq.question)})">Enviar esta pergunta</button>
+        <br><button class="faq-use-btn" data-question="${escHtml(faq.question)}">Enviar esta pergunta</button>
       </div>`;
     $faqBody.appendChild(item);
   });
@@ -462,6 +498,93 @@ const _origLoadSession = loadSession;
 function loadSession(sid) {
   _origLoadSession(sid);
   if (window.innerWidth < 640) closeSidebar();
+}
+
+/* ── Audio upload ────────────────────────────────────────────────── */
+let pendingAudioFile = null;
+
+const $audioBtn   = document.getElementById('audioBtn');
+const $audioInput = document.getElementById('audioInput');
+const $audioPreview = document.getElementById('audioPreview');
+const $audioName  = document.getElementById('audioPreviewName');
+
+$audioBtn.addEventListener('click', () => $audioInput.click());
+
+const MAX_AUDIO_MB = 25;
+
+$audioInput.addEventListener('change', () => {
+  const file = $audioInput.files[0];
+  if (!file) return;
+  // FE-003 fix: reject files above 25 MB before sending to server
+  if (file.size > MAX_AUDIO_MB * 1024 * 1024) {
+    alert(`Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(1)} MB). Limite máximo: ${MAX_AUDIO_MB} MB.`);
+    $audioInput.value = '';
+    return;
+  }
+  pendingAudioFile = file;
+  $audioName.textContent = file.name;
+  $audioPreview.style.display = 'flex';
+  $audioBtn.classList.add('has-audio');
+  $audioInput.value = '';
+});
+
+function removeAudio() {
+  pendingAudioFile = null;
+  $audioPreview.style.display = 'none';
+  $audioBtn.classList.remove('has-audio');
+}
+
+async function sendAudio(file, message) {
+  const form = new FormData();
+  form.append('audio', file, file.name);
+  form.append('message', message || '');
+  form.append('session_id', sessionId);
+
+  showTyping();
+  try {
+    const res = await fetch('/api/chat/audio', { method: 'POST', body: form });
+    hideTyping();
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderMessage({
+      id: data.id,
+      role: 'assistant',
+      content: data.message,
+      source: data.source,
+      timestamp: data.timestamp,
+    });
+    refreshSessions();
+  } catch (err) {
+    hideTyping();
+    renderMessage({
+      role: 'assistant',
+      source: 'error',
+      timestamp: new Date().toISOString(),
+      content: `⚠️ Erro ao processar áudio: ${err.message}`,
+    });
+  }
+}
+
+/* Override send() to handle pending audio */
+const _originalSend = send;
+function send() {
+  if (pendingAudioFile) {
+    const text = $input.value.trim();
+    hideWelcome();
+    renderMessage({
+      role: 'user',
+      content: text || `🎵 ${pendingAudioFile.name}`,
+      source: 'user',
+      timestamp: new Date().toISOString(),
+    });
+    const file = pendingAudioFile;
+    $input.value = '';
+    resizeInput();
+    removeAudio();
+    sendAudio(file, text);
+    return;
+  }
+  _originalSend();
 }
 
 /* ── Init ────────────────────────────────────────────────────────── */

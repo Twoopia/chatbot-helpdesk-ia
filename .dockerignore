@@ -1,0 +1,31 @@
+# Segredos e configuração local
+.env
+.env.*
+
+# Git e editor
+.git
+.github
+.claude
+.vscode
+.idea
+
+# Cache Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ambientes virtuais
+.venv
+venv
+env
+
+# Logs gerados em runtime (criados automaticamente no servidor)
+logs/
+
+# GitHub Pages (não faz parte do backend)
+docs/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db

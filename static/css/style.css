@@ -67,10 +67,14 @@ body {
 .logo-icon { font-size: 20px; }
 .logo-text {
   font-family: 'Syne', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   color: var(--text-bright);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.logo-text span {
+  color: var(--accent-light);
 }
 
 .new-chat-btn {
@@ -649,4 +653,71 @@ body {
 
   /* Demo banner compacto */
   .demo-banner { padding: 7px 14px; font-size: 11px; }
+
+  /* Audio preview compacto */
+  .audio-preview { padding: 6px 12px; font-size: 12px; }
 }
+
+/* ── Audio upload button ─────────────────────────────── */
+.audio-btn {
+  flex-shrink: 0;
+  font-size: 16px;
+  opacity: 0.6;
+  transition: opacity 0.3s, box-shadow 0.7s var(--ease);
+}
+.audio-btn:hover { opacity: 1; box-shadow: 0 0 14px rgba(124,58,237,0.4); }
+.audio-btn.has-audio { opacity: 1; color: var(--accent-light); }
+
+/* ── Audio preview bar ───────────────────────────────── */
+.audio-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 8px;
+  padding: 7px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--accent-light);
+}
+.audio-preview-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+.audio-preview-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.3s, background 0.3s;
+  min-width: 24px; min-height: 24px;
+  display: flex; align-items: center; justify-content: center;
+}
+.audio-preview-remove:hover { color: var(--down); background: rgba(248,113,113,0.1); }
+
+/* ── Frequency report block ──────────────────────────── */
+.freq-report {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: auto;
+}
+.freq-report pre {
+  font-family: 'Courier New', monospace;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--text);
+  padding: 12px 14px;
+  white-space: pre;
+}
+
+/* ── Gemini badge ────────────────────────────────────── */
+.badge-gemini { background: rgba(59,130,246,0.12); color: #60a5fa; }

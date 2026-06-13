@@ -34,6 +34,18 @@ class Session(BaseModel):
     title: Optional[str] = None
 
 
+class AudioAnalysis(BaseModel):
+    bass_db: float
+    mids_db: float
+    highs_db: float
+    lufs: float
+    rms: float
+    bpm: float
+    peak_db: float
+    duration_s: float
+    sample_rate: int
+
+
 class FAQItem(BaseModel):
     id: str
     category: str

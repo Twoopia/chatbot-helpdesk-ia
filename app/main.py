@@ -17,10 +17,13 @@ app = FastAPI(
     description="Chatbot de Help Desk com IA — suporte técnico interno automatizado",
 )
 
+# SEC-002 fix: allow_credentials=True with origins="*" is forbidden by the spec
+# and a CSRF risk. Only enable credentials when origins are explicitly listed.
+_origins = settings.ALLOWED_ORIGINS.split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS.split(","),
-    allow_credentials=True,
+    allow_origins=_origins,
+    allow_credentials="*" not in _origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

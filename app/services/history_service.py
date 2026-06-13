@@ -67,7 +67,8 @@ class HistoryService:
         if not session["title"] and role == "user":
             session["title"] = content[:60] + ("…" if len(content) > 60 else "")
 
-        max_msgs = settings.MAX_HISTORY_PER_SESSION * 2
+        # BUG-005 fix: respect the config value directly (no silent * 2)
+        max_msgs = settings.MAX_HISTORY_PER_SESSION
         if len(session["messages"]) > max_msgs:
             session["messages"] = session["messages"][-max_msgs:]
 
