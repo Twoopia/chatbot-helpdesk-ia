@@ -3,6 +3,7 @@ from typing import Dict
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 
+from app.config import settings
 from app.models.chat import ChatRequest, ChatResponse
 from app.utils.rate_limit import rate_limit
 from app.services.ai_service import ai_service
