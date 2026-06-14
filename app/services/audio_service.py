@@ -16,7 +16,8 @@ async def analyze_audio(audio_bytes: bytes) -> Dict:
 def _analyze_sync(audio_bytes: bytes) -> Dict:
     import librosa  # lazy import — heavy dependency
 
-    y, sr = librosa.load(io.BytesIO(audio_bytes), sr=None, mono=True)
+    # sr=22050 e duration=60 evitam OOM no container Railway (limita RAM a ~5 MB de numpy)
+    y, sr = librosa.load(io.BytesIO(audio_bytes), sr=22050, mono=True, duration=60)
 
     # ── STFT ────────────────────────────────────────────────────────────
     n_fft = 2048
