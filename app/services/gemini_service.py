@@ -72,14 +72,26 @@ class GeminiService:
             # File exceeds Gemini inline limit — send only the frequency report + prompt
             contents = [types.Part.from_text(text=prompt)]
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction=AUDIO_SYSTEM_PROMPT,
-            ),
-        )
-        return response.text
+        # Tenta 2.5-flash; se 503 (sobrecarga), faz fallback para 2.0-flash
+        import time
+        models_to_try = ["gemini-2.5-flash", "gemini-2.0-flash"]
+        last_exc: Exception = RuntimeError("Nenhum modelo disponível")
+        for i, model in enumerate(models_to_try):
+            try:
+                response = client.models.generate_content(
+                    model=model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(
+                        system_instruction=AUDIO_SYSTEM_PROMPT,
+                    ),
+                )
+                return response.text
+            except Exception as exc:
+                last_exc = exc
+                logger.warning("Gemini %s falhou (%s), tentando próximo...", model, exc)
+                if i < len(models_to_try) - 1:
+                    time.sleep(2)
+        raise last_exc
 
 
 gemini_service = GeminiService()
